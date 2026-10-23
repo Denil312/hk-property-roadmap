@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>香港樓市升跌路線圖（1997–今）</title>
+<style>
+  :root {
+    --bg: #f7f7f5;
+    --paper: #ffffff;
+    --text: #1a1a1a;
+    --muted: #5c5c5c;
+    --border: #e5e5e0;
+    --accent: #1d4ed8;
+    --accent-soft: #dbeafe;
+    --warn: #b45309;
+    --warn-bg: #fff7ed;
+    --info: #0369a1;
+    --info-bg: #f0f9ff;
+    --radius: 14px;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 24px rgba(0,0,0,.04);
+    --font: "PingFang HK", "Noto Sans TC", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px; }
+  header h1 { font-size: 1.75rem; margin: 0 0 8px; letter-spacing: -.02em; }
+  header .summary { color: var(--muted); margin: 0 0 20px; max-width: 70ch; }
+  nav.toc {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px;
+  }
+  nav.toc a {
+    text-decoration: none; color: var(--text); background: var(--paper);
+    border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px;
+    font-size: .875rem;
+  }
+  nav.toc a:hover { border-color: var(--accent); color: var(--accent); }
+  section {
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 22px 22px 18px; margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  section h2 { margin: 0 0 12px; font-size: 1.15rem; }
+  .caption { color: var(--muted); font-size: .85rem; margin: -4px 0 14px; }
+  .callout {
+    border-radius: 12px; padding: 14px 16px; margin: 0 0 14px;
+    border: 1px solid var(--border);
+  }
+  .callout.info { background: var(--info-bg); border-color: #bae6fd; }
+  .callout.warn { background: var(--warn-bg); border-color: #fed7aa; }
+  .callout .lead { font-weight: 650; margin-bottom: 4px; }
+  .callout.info .lead { color: var(--info); }
+  .callout.warn .lead { color: var(--warn); }
+  p { margin: 0 0 12px; }
+  .props {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px; margin-top: 8px;
+  }
+  .prop {
+    background: var(--bg); border-radius: 10px; padding: 10px 12px;
+  }
+  .prop .k { font-size: .75rem; color: var(--muted); }
+  .prop .v { font-weight: 650; font-size: 1.05rem; margin-top: 2px; }
+  .seg {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 12px;
+  }
+  .seg button {
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    border-radius: 999px; padding: 6px 12px; cursor: pointer; font: inherit; font-size: .85rem;
+  }
+  .seg button.active {
+    background: var(--accent); border-color: var(--accent); color: #fff;
+  }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th, td {
+    text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th { font-size: .75rem; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .chart-box { width: 100%; overflow: hidden; }
+  svg.chart { width: 100%; height: auto; display: block; }
+  .grid2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px;
+  }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  ul { margin: 0; padding-left: 1.15rem; }
+  li { margin: 4px 0; }
+  .rows { display: grid; gap: 10px; }
+  .row {
+    border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;
+    background: var(--bg);
+  }
+  .row .title { font-weight: 650; margin-bottom: 4px; }
+  .row .meta { color: var(--muted); font-size: .8rem; margin-top: 6px; }
+  .pill {
+    display: inline-block; font-size: .75rem; padding: 2px 8px; border-radius: 999px;
+    background: #ffedd5; color: var(--warn); font-weight: 600;
+  }
+  .links { display: grid; gap: 8px; }
+  .links a {
+    display: block; text-decoration: none; color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px;
+    background: var(--bg);
+  }
+  .links a:hover { border-color: var(--accent); }
+  .links .site { color: var(--muted); font-size: .8rem; }
+  footer {
+    margin-top: 8px; color: var(--muted); font-size: .8rem; text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>香港樓市升跌路線圖（1997–今）</h1>
+    <p class="summary">以差餉物業估價署私人住宅售價指數為軸，整理 1997 至今的週期、宏觀事件與「辣招／撤辣」政策；供講座回顧與分享，而非買賣建議。本頁為獨立 HTML，無需登入。</p>
+  </header>
+
+  <nav class="toc" aria-label="目錄">
+    <a href="#summary">而家處邊</a>
+    <a href="#chart">指數走勢</a>
+    <a href="#phases">階段時間表</a>
+    <a href="#policy">辣招與撤辣</a>
+    <a href="#outlook">而家點睇</a>
+    <a href="#sources">資料來源</a>
+  </nav>
+
+  <section id="summary">
+    <h2>投資經理視角：而家處邊</h2>
+    <div class="callout info">
+      <div class="lead">重點</div>
+      香港私人住宅自 2021 年 9 月月度高峰（約 398，1999=100）起進入調整；2024 年 2 月全撤辣與按揭放寬後，交投曾回暖，但年均值繼續下行至 2025 年約 290。2025 年中起指數溫和回升，2026 年 8 月臨時指數約 320.5，仍低於 2021 高峰約兩成。驅動已由「政策壓抑需求」轉向「利率、收入、供應與信心」。
+    </div>
+    <p>本頁指數一律採用差餉物業估價署「所有類別」私人住宅售價指數，基期為 1999=100（官方序列）。市面常見「1997 年 6 月=100」屬另一換算基期；數字不可直接對照，但升跌方向一致。1997 年 6 月官方指數約為 172。</p>
+    <div class="props">
+      <div class="prop"><div class="k">1997 年均值</div><div class="v">163.1</div></div>
+      <div class="prop"><div class="k">2003 年均值（谷底年）</div><div class="v">61.6</div></div>
+      <div class="prop"><div class="k">2021 年均值（高峰年）</div><div class="v">392.7</div></div>
+      <div class="prop"><div class="k">2025 年均值</div><div class="v">290.1</div></div>
+      <div class="prop"><div class="k">2026 年 8 月（臨時）</div><div class="v">320.5</div></div>
+      <div class="prop"><div class="k">數據截止</div><div class="v">月度至 2026-08</div></div>
+    </div>
+  </section>
+
+  <section id="chart">
+    <h2>售價指數走勢（年度）</h2>
+    <p class="caption">差餉物業估價署私人住宅售價指數 · 所有類別 · 1999=100。標籤僅標示關鍵年份。</p>
+    <div class="chart-box" id="chartBox"></div>
+    <p>由 2009 年低息環境起，指數由約 121 升至 2021 年約 393（年均值），累積升幅約 2.2 倍；其間政府於 2010–2017 層層疊加需求管理措施（辣招），升勢放緩但未扭轉。2022 年起美息周期扭轉，指數明顯回落；2024 全撤辣後，價格續尋底至 2025 年初，其後溫和反彈。</p>
+  </section>
+
+  <section id="phases">
+    <h2>主要階段時間表</h2>
+    <p class="caption">篩選可只睇某一類時期。指數為官方序列約數。</p>
+    <div class="seg" id="eraSeg"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>時期</th><th>指數大致水平</th><th>方向</th><th>主因（事件＋政策）</th></tr>
+        </thead>
+        <tbody id="phaseBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="policy">
+    <h2>辣招堆疊 vs 撤辣／放寬</h2>
+    <p>辣招主要壓制短炒、外來需求與非首置投資；按揭審慎措施則限制槓桿。2010–2017 政策層層加碼期間，樓價仍因超低息與供應預期而上升——政策減慢升幅多於即時逆轉趨勢。2023 減辣、2024 全撤辣與停壓測後，政策約束明顯鬆綁；其後價格能否企穩，更視乎息口、就業收入與新供應節奏。</p>
+    <div class="seg" id="polSeg"></div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>日期</th><th>類型</th><th>措施</th><th>內容摘要</th></tr>
+        </thead>
+        <tbody id="policyBody"></tbody>
+      </table>
+    </div>
+    <div class="grid2">
+      <div>
+        <ul>
+          <li>推出初期：交投急縮、短炒／外來買家佔比下降</li>
+          <li>中期：若利率極低、流動性充裕，價格仍可緩升</li>
+          <li>疊加效應：SSD＋BSD＋NRSD＋按揭限制提高入市門檻</li>
+          <li>撤銷後：交易成本下降，交投回暖可先於價格見底</li>
+        </ul>
+      </div>
+      <div>
+        <ul>
+          <li>2009 起：逆周期措施逐步收緊成數與供款壓力測試</li>
+          <li>2023–2024：下調壓測、放寬成數／樓花按揭</li>
+          <li>2024.2.28：暫停 200 基點壓測</li>
+          <li>2024.10.16：住宅最高成數統一 70%、DSR 50%</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="outlook">
+    <h2>而家點睇</h2>
+    <div class="callout warn">
+      <div class="lead">留意</div>
+      以下屬事實框架與觀察清單，並非升跌預測或投資建議。物業屬長線、高槓桿決定，須按自身現金流與風險承受能力評估。
+    </div>
+    <div class="rows">
+      <div class="row">
+        <div class="title">價格位置</div>
+        2026 年 8 月臨時指數約 320.5，較 2021 年 9 月高峰約 398 低約 19%；較 2025 年 3 月近月低位約 285 已回升約一成。
+        <div class="meta">RVD 月度</div>
+      </div>
+      <div class="row">
+        <div class="title">政策環境</div>
+        住宅需求管理辣招已於 2024.2.28 全面取消；按揭逆周期措施大幅回撤。短期再加辣機率低，但金管局仍可因應泡沫風險重新收緊。
+        <div class="meta">IRD／HKMA</div>
+      </div>
+      <div class="row">
+        <div class="title">主要風險 <span class="pill">持續跟進</span></div>
+        美國／香港利率路徑反覆、本地失業率與收入、新盤供應與發展商定價、外圍金融波動。
+      </div>
+      <div class="row">
+        <div class="title">可跟進指標</div>
+        RVD 每月售價指數定稿、土地註冊處成交量、銀行按揭利率與新批按揭、差估署租金指數、政府賣地／供應預測。
+        <div class="meta">監察清單</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="sources">
+    <h2>資料來源與缺口</h2>
+    <div class="links">
+      <a href="https://www.rvd.gov.hk/datagovhk/1.4A.csv" target="_blank" rel="noopener"><strong>私人住宅售價指數（年度 CSV）</strong><div class="site">差餉物業估價署 / data.gov.hk</div></a>
+      <a href="https://www.rvd.gov.hk/datagovhk/1.4M.csv" target="_blank" rel="noopener"><strong>私人住宅售價指數（月度 CSV）</strong><div class="site">差餉物業估價署</div></a>
+      <a href="https://www.ird.gov.hk/chi/faq/dsmm.htm" target="_blank" rel="noopener"><strong>住宅物業需求管理措施 FAQ</strong><div class="site">稅務局</div></a>
+      <a href="https://www.budget.gov.hk/2024/chi/budget08.html" target="_blank" rel="noopener"><strong>2024-25 預算案：全撤辣</strong><div class="site">財政預算案</div></a>
+      <a href="https://www.hkma.gov.hk/eng/news-and-media/press-releases/2024/02/20240228-3/" target="_blank" rel="noopener"><strong>2024.2.28 按揭措施調整</strong><div class="site">金管局</div></a>
+      <a href="https://www.hkma.gov.hk/eng/news-and-media/press-releases/2024/10/20241016-4/" target="_blank" rel="noopener"><strong>2024.10.16 按揭再放寬</strong><div class="site">金管局</div></a>
+    </div>
+    <p style="margin-top:14px">缺口與說明：（1）本頁圖表用年度指數；月度高峰／谷底另以文字標示。（2）2026 年 6–8 月指數為臨時數字（CSV 標註 P），日後或以定稿取代。（3）「約 8 輪」按揭措施為市場常用概括，單次通告細節未逐條展開。（4）2019／2022 按保放寬僅作時間軸標記。（5）若參考圖用 1997 年 6 月=100，縱軸數值會與本頁不同，勿混用。</p>
+  </section>
+
+  <footer>獨立 HTML · 數據截止 2026-08 · 僅供講座／教育用途</footer>
+</div>
+
+<script>
+const ANNUAL = [
+  {y:1997,v:163.1},{y:1998,v:117.1},{y:1999,v:100},{y:2000,v:89.6},{y:2001,v:78.7},
+  {y:2002,v:69.9},{y:2003,v:61.6},{y:2004,v:78},{y:2005,v:92},{y:2006,v:92.7},
+  {y:2007,v:103.5},{y:2008,v:120.5},{y:2009,v:121.3},{y:2010,v:150.9},{y:2011,v:182.1},
+  {y:2012,v:206.2},{y:2013,v:242.4},{y:2014,v:256.9},{y:2015,v:296.8},{y:2016,v:286.1},
+  {y:2017,v:333.9},{y:2018,v:377.3},{y:2019,v:383},{y:2020,v:381.2},{y:2021,v:392.7},
+  {y:2022,v:369.7},{y:2023,v:337.4},{y:2024,v:298.7},{y:2025,v:290.1}
+];
+
+const PHASES = [
+  {era:"危機",period:"1997–1998",index:"年均值 163 → 117；1997 年中高位約 172",direction:"急跌",cause:"亞洲金融風暴；利率急升、信貸緊縮、信心崩潰"},
+  {era:"危機",period:"1999–2003",index:"年均值 100 → 61.6；2003 年 7 月約 58.4（谷底）",direction:"持續下跌",cause:"通縮、負資產、沙士（SARS）打擊經濟與樓市"},
+  {era:"復甦",period:"2004–2007",index:"61.6 → 103.5",direction:"穩步回升",cause:"疫後復甦、內地經濟帶動、利率環境相對寬鬆"},
+  {era:"危機",period:"2008–2009",index:"年均值約 120–121；2008 年底曾跌至約 105",direction:"急跌後反彈",cause:"環球金融海嘯；其後量化寬鬆與低息帶動反彈"},
+  {era:"辣招",period:"2010–2012",index:"150.9 → 206.2",direction:"上升（升勢未止）",cause:"超低息、流動性充裕；推出 SSD（2010.11）、加強 SSD＋BSD（2012.10）；金管局多輪按揭審慎措施"},
+  {era:"辣招",period:"2013–2016",index:"242.4 → 286.1（2015 年 296.8 後略回）",direction:"升後短暫調整",cause:"DSD／雙倍從價印花稅（2013.2）；NRSD 劃一 15%（2016.11）；供應與利率預期變化"},
+  {era:"辣招",period:"2017–2019",index:"333.9 → 383",direction:"再升至歷史高區",cause:"一約多伙收緊（2017.4）；按揭壓力測試／成數限制持續；需求仍強"},
+  {era:"高位",period:"2020–2021",index:"年均值 381 → 392.7；2021 年 9 月約 398.1（月度高峰）",direction:"見頂",cause:"疫情下低息、本地需求；其後利率將進入上升週期"},
+  {era:"調整撤辣",period:"2022–2023",index:"369.7 → 337.4",direction:"明顯回調",cause:"美息急升、港元按揭成本上升；2023.10 減辣（SSD 縮至 2 年、BSD／NRSD 減半）"},
+  {era:"調整撤辣",period:"2024",index:"年均值 298.7；年初約 307，年底約 289",direction:"續跌、交投曾回暖",cause:"2024.2.28 全撤辣；金管局停壓測、放寬按揭；10 月再統一成數上限至 70%"},
+  {era:"調整撤辣",period:"2025–2026（截至 2026.8）",index:"2025 年均值 290.1；2025.3 約 284.9；2026.8 臨時約 320.5",direction:"低位整固後溫和回升",cause:"息口預期轉向、撤辣後需求釋放；供應與宏觀不確定性仍在"}
+];
+
+const POLICIES = [
+  {when:"2010.11.20",kind:"辣招",name:"SSD 額外印花稅",detail:"持有 24 個月內轉售：6 個月內 15%、6–12 個月 10%、12–24 個月 5%"},
+  {when:"2009–2017",kind:"按揭",name:"多輪按揭審慎監管",detail:"金管局逐步收緊 LTV、DSR 及壓力測試（俗稱約 8 輪）"},
+  {when:"2012.10.27",kind:"辣招",name:"加強 SSD＋推出 BSD",detail:"SSD 持有期延至 36 個月、稅率提高；非香港永久居民／公司買家徵 BSD 15%"},
+  {when:"2013.02.23",kind:"辣招",name:"DSD 雙倍從價印花稅",detail:"從價印花稅稅率全面加倍；港人首置／換樓可豁免較高稅率"},
+  {when:"2016.11.05",kind:"辣招",name:"NRSD 新住宅印花稅 15%",detail:"住宅第 1 標準第 1 部劃一 15%，取代原先分級 DSD 較高稅率"},
+  {when:"2017.04.12",kind:"辣招",name:"一約多伙收緊",detail:"首置豁免收緊至只適用於取得單一住宅物業"},
+  {when:"2019／2022",kind:"放寬",name:"放寬按揭保險",detail:"兩次放寬按保成數／適用範圍，協助首置入市（細則以按保計劃原文為準）"},
+  {when:"2023.10.25",kind:"放寬",name:"減辣",detail:"SSD 適用期由 3 年縮至 2 年；BSD 與 NRSD 由 15% 減半至 7.5%；專才置業「先免後徵」"},
+  {when:"2024.02.28",kind:"放寬",name:"全撤辣",detail:"SSD、BSD、NRSD（第 1 標準第 1 部 7.5%）一律取消；住宅改按第 2 標準從價印花稅"},
+  {when:"2024.02.28",kind:"按揭",name:"停壓測＋鬆按揭",detail:"暫停假設利率上調 200 基點壓力測試；上調多類物業按揭成數上限"},
+  {when:"2024.10.16",kind:"按揭",name:"按揭上限再統一",detail:"住宅／非住宅最高 LTV 統一 70%、DSR 統一 50%，接近 2009 年前水平"}
+];
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function drawChart() {
+  const W = 1000, H = 360, pad = {t:28,r:24,b:44,l:48};
+  const vals = ANNUAL.map(d => d.v);
+  const minV = 0, maxV = 450;
+  const x = i => pad.l + (i / (ANNUAL.length - 1)) * (W - pad.l - pad.r);
+  const y = v => pad.t + (1 - (v - minV) / (maxV - minV)) * (H - pad.t - pad.b);
+  let path = ANNUAL.map((d,i) => `${i?'L':'M'}${x(i).toFixed(1)},${y(d.v).toFixed(1)}`).join(' ');
+  const labelYears = new Set([1997,2003,2008,2016,2021,2025]);
+  const annotations = [
+    {i:0,label:"1997 金融風暴"},
+    {i:6,label:"2003 沙士谷"},
+    {i:11,label:"2008 海嘯"},
+    {i:24,label:"2021 高峰"},
+    {i:28,label:"2025"}
+  ];
+  const ticks = [0,100,200,300,400];
+  let svg = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="私人住宅售價指數年度走勢">`;
+  ticks.forEach(t => {
+    svg += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${y(t)}" y2="${y(t)}" stroke="#e5e5e0" stroke-width="1"/>`;
+    svg += `<text x="${pad.l-8}" y="${y(t)+4}" text-anchor="end" fill="#5c5c5c" font-size="12" font-family="system-ui">${t}</text>`;
+  });
+  svg += `<path d="${path}" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  ANNUAL.forEach((d,i) => {
+    if (labelYears.has(d.y)) {
+      svg += `<circle cx="${x(i)}" cy="${y(d.v)}" r="3.5" fill="#1d4ed8"/>`;
+      svg += `<text x="${x(i)}" y="${H-14}" text-anchor="middle" fill="#5c5c5c" font-size="12" font-family="system-ui">${d.y}</text>`;
+    }
+  });
+  annotations.forEach(a => {
+    const yy = y(ANNUAL[a.i].v) - 12;
+    svg += `<text x="${x(a.i)}" y="${yy}" text-anchor="middle" fill="#1a1a1a" font-size="11" font-family="system-ui">${esc(a.label)}</text>`;
+  });
+  svg += `</svg>`;
+  document.getElementById('chartBox').innerHTML = svg;
+}
+
+function makeSeg(el, options, onChange) {
+  el.innerHTML = '';
+  let active = options[0];
+  options.forEach(opt => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = opt;
+    if (opt === active) b.classList.add('active');
+    b.addEventListener('click', () => {
+      active = opt;
+      [...el.querySelectorAll('button')].forEach(x => x.classList.toggle('active', x.textContent === active));
+      onChange(active);
+    });
+    el.appendChild(b);
+  });
+  onChange(active);
+}
+
+function renderPhases(era) {
+  const list = era === '全部' ? PHASES : PHASES.filter(p => p.era === era);
+  document.getElementById('phaseBody').innerHTML = list.map(p =>
+    `<tr><td>${esc(p.period)}</td><td>${esc(p.index)}</td><td>${esc(p.direction)}</td><td>${esc(p.cause)}</td></tr>`
+  ).join('');
+}
+
+function renderPolicies(kind) {
+  const list = kind === '全部' ? POLICIES : POLICIES.filter(p => p.kind === kind);
+  document.getElementById('policyBody').innerHTML = list.map(p =>
+    `<tr><td>${esc(p.when)}</td><td>${esc(p.kind)}</td><td>${esc(p.name)}</td><td>${esc(p.detail)}</td></tr>`
+  ).join('');
+}
+
+drawChart();
+makeSeg(document.getElementById('eraSeg'), ['全部','危機','復甦','辣招','高位','調整撤辣'], renderPhases);
+makeSeg(document.getElementById('polSeg'), ['全部','辣招','放寬','按揭'], renderPolicies);
+</script>
+</body>
+</html>
